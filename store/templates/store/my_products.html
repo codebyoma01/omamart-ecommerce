@@ -1,0 +1,47 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+  <h2 class="mb-4">My Products</h2>
+
+  <form method="get" class="d-flex mb-4 flex-wrap gap-2">
+    <input type="text" name="q" class="form-control me-2" placeholder="Search my products..." value="{{ request.GET.q }}">
+    
+    <select name="category" class="form-select me-2" style="max-width: 200px;">
+      <option value="">All Categories</option>
+      <option value="fashion" {% if request.GET.category == "fashion" %}selected{% endif %}>Fashion</option>
+      <option value="electronics" {% if request.GET.category == "electronics" %}selected{% endif %}>Electronics</option>
+      <option value="beauty" {% if request.GET.category == "beauty" %}selected{% endif %}>Beauty</option>
+      <option value="books" {% if request.GET.category == "books" %}selected{% endif %}>Books</option>
+      <option value="home" {% if request.GET.category == "home" %}selected{% endif %}>Home & Living</option>
+      <option value="other" {% if request.GET.category == "other" %}selected{% endif %}>Other</option>
+    </select>
+
+    <button class="btn btn-outline-primary" type="submit">Filter</button>
+  </form>
+
+  {% if products %}
+    <div class="row">
+      {% for product in products %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+              <span class="badge bg-secondary text-uppercase mb-2">{{ product.category }}</span>
+              <h5 class="card-title">{{ product.title }}</h5>
+              <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+              <p class="fw-bold">${{ product.price }}</p>
+
+              <a href="{% url 'product_detail' product.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+              <a href="{% url 'product_edit' product.pk %}" class="btn btn-sm btn-outline-success">Edit</a>
+              <a href="{% url 'product_delete' product.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">You haven't added any products yet.</p>
+  {% endif %}
+{% endblock %}

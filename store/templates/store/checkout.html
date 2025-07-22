@@ -1,0 +1,49 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="text-center text-danger mb-4">🧾 Checkout</h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="address" class="form-label">Shipping Address</label>
+              <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="note" class="form-label">Note (Optional)</label>
+              <textarea class="form-control" id="note" name="note" rows="2"></textarea>
+            </div>
+
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary btn-lg">Place Order</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h5 class="text-muted">Cart Summary</h5>
+        <ul class="list-group">
+          {% for item in cart_items %}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>{{ item.product.title }} x{{ item.quantity }}</span>
+              <span>₦{{ item.total_price }}</span>
+            </li>
+          {% endfor %}
+          <li class="list-group-item d-flex justify-content-between fw-bold">
+            <span>Total</span>
+            <span>₦{{ total }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

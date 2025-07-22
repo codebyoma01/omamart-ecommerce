@@ -1,0 +1,54 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="text-center text-danger mb-4">🛒 Your Cart</h2>
+
+  {% if cart_items %}
+    <div class="table-responsive">
+      <table class="table align-middle table-bordered shadow-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th style="width: 120px;">Quantity</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart_items %}
+          <tr>
+            <td>{{ item.product.title }}</td>
+            <td>₦{{ item.product.price }}</td>
+            <td>
+              <form method="POST" action="{% url 'update_cart_quantity' item.id %}">
+                {% csrf_token %}
+                <input type="number" name="quantity" min="1" value="{{ item.quantity }}" class="form-control form-control-sm" style="width: 80px; display: inline-block;">
+                <button class="btn btn-sm btn-outline-secondary ms-1">Update</button>
+              </form>
+            </td>
+            <td><strong>₦{{ item.total_price }}</strong></td>
+            <td>
+              <a href="{% url 'remove_from_cart' item.pk %}" class="btn btn-sm btn-outline-danger">✖</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-end mb-3">
+      <h5 class="text-muted">Cart Total: <span class="text-dark fw-bold">₦{{ total }}</span></h5>
+    </div>
+
+    <div class="text-end">
+      <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg">Proceed to Checkout</a>
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center">
+      Your cart is empty. <a href="{% url 'product_list' %}">Start shopping now!</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

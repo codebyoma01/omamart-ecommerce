@@ -1,0 +1,40 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-4">
+  <h2 class="mb-4 text-center">📊 My Dashboard</h2>
+
+  <div class="row text-center mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Total Products</h5>
+          <p class="display-6">{{ total_products }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Total Value</h5>
+          <p class="display-6">₦{{ total_value }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mb-3">🆕 Recently Added Products</h4>
+  {% if recent_products %}
+    <ul class="list-group">
+      {% for product in recent_products %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ product.title }}
+          <span class="badge bg-primary rounded-pill">₦{{ product.price }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">You haven’t added any products yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

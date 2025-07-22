@@ -1,0 +1,14 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-5 text-center">
+  <div class="card shadow-sm p-4 mx-auto" style="max-width: 600px; background-color: #fff0f5;">
+    <h2 class="text-success mb-3">🎉 Order Successful!</h2>
+    <p class="lead text-muted">Thank you for shopping with <strong>OmaMart</strong>.</p>
+    <p class="mb-4">Your order has been placed successfully. You’ll receive an email confirmation shortly.</p>
+
+    <a href="{% url 'product_list' %}" class="btn btn-outline-secondary rounded-pill me-2">Continue Shopping</a>
+    <a href="{% url 'order_history' %}" class="btn btn-primary rounded-pill">View Orders</a>
+  </div>
+</div>
+{% endblock %}
