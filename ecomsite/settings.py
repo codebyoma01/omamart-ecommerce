@@ -27,6 +27,8 @@ SECRET_KEY = 'django-insecure-27%menls(4bvw0ewc2@*v)+fex#m313tnsbeu^+)0=@!j^7$f6
 DEBUG = True
 
 ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME'), 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://omamart-ecommerce.onrender.com']
+
 
 
 # Application definition
