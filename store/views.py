@@ -12,10 +12,23 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
 
-
 def home(request):
-    return render(request, 'store/home.html')
+    query = request.GET.get('q')
+    category = request.GET.get('category')
 
+    products = Product.objects.all().order_by('-created_at')
+
+    if query:
+        products = products.filter(title__icontains=query)
+
+    if category:
+        products = products.filter(category=category)
+
+    return render(request, 'store/home.html', {
+        'products': products,
+        'query': query,
+        'selected_category': category,
+    })
 
 def product_list(request):
     query = request.GET.get('q')
@@ -142,22 +155,25 @@ def my_products(request):
         'query': query,
         'category': category,
     })
-
-
 @login_required
 def dashboard(request):
     user = request.user
+
     products = Product.objects.filter(seller=user)
     total_products = products.count()
-
     category_summary = products.values('category').annotate(count=Count('id')).order_by('-count')
     recent_products = products.order_by('-created_at')[:5]
+
+    orders = Order.objects.filter(user=user).order_by('-created_at')[:5]
+    total_orders = orders.count()
 
     return render(request, 'store/dashboard.html', {
         'user': user,
         'total_products': total_products,
         'category_summary': category_summary,
         'recent_products': recent_products,
+        'orders': orders,
+        'total_orders': total_orders,
     })
 
 
@@ -318,3 +334,16 @@ def change_password(request):
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'store/password_change.html', {'form': form})
+
+@login_required
+def upload_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.user = request.user  # if you track the uploader
+            product.save()
+            return redirect('home')
+    else:
+        form = ProductForm()
+    return render(request, 'upload_product.html', {'form': form})
