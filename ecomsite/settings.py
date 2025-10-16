@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME'), 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://omamart-ecommerce.onrender.com']
+ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']
+
 
 
 
