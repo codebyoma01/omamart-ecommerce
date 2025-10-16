@@ -9,40 +9,29 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
 from pathlib import Path
 import os
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# ✅ Allow Render domain + localhost
+ALLOWED_HOSTS = [
+    os.environ.get('RENDER_EXTERNAL_HOSTNAME'),
+    'omamart-ecommerce.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-27%menls(4bvw0ewc2@*v)+fex#m313tnsbeu^+)0=@!j^7$f6'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # important for deployment
-
-# Render configuration for allowed hosts
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME, 'localhost', '127.0.0.1']
-    CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}']
-else:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-    CSRF_TRUSTED_ORIGINS = []
-
-# Optional: You can hardcode too if needed
-# ALLOWED_HOSTS = ['omamart-ecommerce.onrender.com', 'localhost', '127.0.0.1']
-# CSRF_TRUSTED_ORIGINS = ['https://omamart-ecommerce.onrender.com']
-
+# ✅ Trust Render origin for CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'https://omamart-ecommerce.onrender.com'
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -59,7 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # for static files on Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -120,6 +109,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Enable WhiteNoise compression and caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Enable compressed static files for Render
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
